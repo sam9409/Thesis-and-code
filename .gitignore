@@ -14,5 +14,9 @@ checkpoints/
 __pycache__/
 *.pyc
 
+# Word documents
+*.docx
+
+
 # VS Code
 .vscode/
