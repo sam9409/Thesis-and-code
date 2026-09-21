@@ -1,0 +1,18 @@
+# Datasets
+UNSWDATA/
+MachineLearningCSV/
+MachineLearningCSV.zip
+
+# Models
+setfit-cicids2017-model/
+setfit-unsw-nb15-model/
+
+# Training checkpoints
+checkpoints/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# VS Code
+.vscode/
