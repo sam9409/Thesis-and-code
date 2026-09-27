@@ -5,7 +5,6 @@ from Interface import interface
 
 
 def main():
-
     random_seed = 42
     test_size = 100
 
