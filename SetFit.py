@@ -1,8 +1,9 @@
 from datasets import Dataset
 from setfit import SetFitModel, Trainer, TrainingArguments
+from modelStrategy import ModelStrategy
 
 
-class SetFit:
+class SetFit(ModelStrategy):
 
     def __init__(
         self,
@@ -13,16 +14,47 @@ class SetFit:
         num_epochs: int = 1,
         random_seed: int = 42
     ):
+
         self.unique_labels = unique_labels
         self.model_name = model_name
         self.model_output_dir = model_output_dir
         self.batch_size = batch_size
         self.num_epochs = num_epochs
         self.random_seed = random_seed
+
         self.model = None
         self.trainer = None
         self.train_dataset = None
         self.test_dataset = None
+
+
+    def prepare_data(
+        self,
+        dataset,
+        train_df,
+        test_df
+    ):
+
+        print("\nConverting data to text...")
+
+        train_df = dataset.convert_to_text(
+            train_df
+        )
+
+        test_df = dataset.convert_to_text(
+            test_df
+        )
+
+        self.create_datasets(
+            train_df=train_df,
+            test_df=test_df
+        )
+
+        self.load_model()
+        self.create_trainer()
+
+        return train_df, test_df
+
 
     def create_datasets(
         self,
@@ -46,23 +78,34 @@ class SetFit:
         print("\nTest Dataset:")
         print(self.test_dataset)
 
-        return self.train_dataset, self.test_dataset
+        return (
+            self.train_dataset,
+            self.test_dataset
+        )
 
 
     def load_model(self):
-      
-        print(f"\nLoading SetFit model: {self.model_name}")
+
+        print(
+            f"\nLoading SetFit model: "
+            f"{self.model_name}"
+        )
 
         self.model = SetFitModel.from_pretrained(
             self.model_name,
             labels=self.unique_labels
         )
 
-        print(f"Model loaded on: {self.model.device}")
+        print(
+            f"Model loaded on: "
+            f"{self.model.device}"
+        )
 
         return self.model
 
+
     def create_trainer(self):
+
         training_args = TrainingArguments(
             batch_size=self.batch_size,
             num_epochs=self.num_epochs,
@@ -80,17 +123,22 @@ class SetFit:
 
         return self.trainer
 
+
     def train(self):
 
         print("\nStarting SetFit training")
+
         self.trainer.train()
+
         print("\nTraining complete")
 
 
     def evaluate(self):
-  
+
         print("\nEvaluating model")
+
         metrics = self.trainer.evaluate()
+
         print("\nEvaluation Results:")
 
         for name, value in metrics.items():
@@ -99,11 +147,25 @@ class SetFit:
         return metrics
 
 
+    def predict(
+        self,
+        samples
+    ):
 
-    def predict(self, text):
-        prediction = self.model.predict([text])
+        return self.model.predict(
+            samples
+        )
 
-        return prediction
+
+    def get_test_samples(
+        self,
+        test_data
+    ):
+
+        return (
+            test_data["text"]
+            .tolist()
+        )
 
 
     def save_model(self):
@@ -134,7 +196,9 @@ class SetFit:
         self.load_model()
         self.create_trainer()
         self.train()
+
         metrics = self.evaluate()
+
         self.save_model()
 
         return metrics

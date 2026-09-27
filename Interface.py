@@ -33,10 +33,11 @@ class interface:
         print("\nSELECT DATASET")
         print("1. CIC-IDS2017")
         print("2. UNSW-NB15")
+        print("3. Both")
 
         while True:
 
-            choice = input("\nEnter dataset number (1-2): ")
+            choice = input("\nEnter dataset number (1-3): ")
 
             if choice == "1":
                 return "CIC-IDS2017"
@@ -44,9 +45,11 @@ class interface:
             elif choice == "2":
                 return "UNSW-NB15"
 
-            else:
-                print("Invalid choice. Please enter 1 or 2.")
+            elif choice == "3":
+                return "Both"
 
+            else:
+                print("Invalid choice. Please enter 1-3.")
 
     def select_shot_size(self):
 
