@@ -3,6 +3,7 @@ from ModelFactory import ModelFactory
 from Evaluator import Evaluator
 from ProtoNetPrep import ProtoNetPrep
 from numbers import Integral
+from sklearn.model_selection import train_test_split
 
 import numpy as np
 import pandas as pd
@@ -18,9 +19,11 @@ class ExperimentRunner:
         test_size=100,
         random_seed=42
     ):
+
         self.shot_size = shot_size
         self.test_size = test_size
         self.random_seed = random_seed
+
 
     def run(
         self,
@@ -33,13 +36,12 @@ class ExperimentRunner:
         print("\nSTART EXPERIMENT")
         print(f"Model: {model_name}")
         print(f"Dataset: {dataset_name}")
-        print(f"Shot Size: {self.shot_size}")
-        print(f"Test Size: {self.test_size}")
 
         dataset.load_data()
         dataset.clean_data()
         dataset.encode_labels()
 
+        # ProtoNet uses its own training process
         if model_name == "ProtoNet":
 
             return self.run_protonet(
@@ -48,21 +50,37 @@ class ExperimentRunner:
                 model_output_dir=model_output_dir
             )
 
-        if dataset_name == "UNSW-NB15":
+        # Autoencoder uses the full training dataset
+        if model_name == "Autoencoder":
 
             train_df, test_df = (
-                self.create_unsw_split(
-                    dataset
+                self.create_traditional_encoder_split(
+                    dataset,
+                    dataset_name
                 )
             )
 
+        # Other models use few-shot training
         else:
 
-            train_df, test_df = (
-                self.create_cic_split(
-                    dataset
+            print(f"Shot Size: {self.shot_size}")
+            print(f"Test Size: {self.test_size}")
+
+            if dataset_name == "UNSW-NB15":
+
+                train_df, test_df = (
+                    self.create_unsw_split(
+                        dataset
+                    )
                 )
-            )
+
+            else:
+
+                train_df, test_df = (
+                    self.create_cic_split(
+                        dataset
+                    )
+                )
 
         print("\nTraining class counts:")
 
@@ -80,11 +98,34 @@ class ExperimentRunner:
             .sort_index()
         )
 
+        # Autoencoder needs the number
+        # of numerical input features
+        input_size = None
+
+        if model_name == "Autoencoder":
+
+            feature_columns = (
+                self.get_feature_columns(
+                    train_df,
+                    "label"
+                )
+            )
+
+            input_size = len(
+                feature_columns
+            )
+
+            print(
+                f"\nEncoder input features: "
+                f"{input_size}"
+            )
+
         model = ModelFactory.create_model(
             model_name=model_name,
             unique_labels=dataset.unique_labels,
             model_output_dir=model_output_dir,
-            random_seed=self.random_seed
+            random_seed=self.random_seed,
+            input_size=input_size
         )
 
         train_data, test_data = (
@@ -120,6 +161,7 @@ class ExperimentRunner:
                 predicted_label,
                 Integral
             ):
+
                 return int(
                     predicted_label
                 )
@@ -173,6 +215,7 @@ class ExperimentRunner:
         print(f"Dataset: {dataset_name}")
 
         return results
+
 
     def run_protonet(
         self,
@@ -503,6 +546,7 @@ class ExperimentRunner:
 
         return results
 
+
     def get_protonet_pools(
         self,
         dataset,
@@ -596,6 +640,7 @@ class ExperimentRunner:
             testing_pool
         )
 
+
     def get_feature_columns(
         self,
         data,
@@ -624,6 +669,7 @@ class ExperimentRunner:
             )
 
         return feature_columns
+
 
     def create_support_set(
         self,
@@ -658,6 +704,7 @@ class ExperimentRunner:
             ignore_index=True
         )
 
+
     def create_test_set(
         self,
         testing_pool,
@@ -690,6 +737,7 @@ class ExperimentRunner:
             test_parts,
             ignore_index=True
         )
+
 
     def save_protonet(
         self,
@@ -741,6 +789,8 @@ class ExperimentRunner:
             f"\nProtoNet saved to: "
             f"{model_path}"
         )
+
+
     def create_cic_split(
         self,
         dataset
@@ -773,6 +823,7 @@ class ExperimentRunner:
             train_df,
             test_df
         )
+
 
     def create_unsw_split(
         self,
@@ -852,6 +903,53 @@ class ExperimentRunner:
             test_parts,
             ignore_index=True
         )
+
+        return (
+            train_df,
+            test_df
+        )
+
+
+    def create_traditional_encoder_split(
+        self,
+        dataset,
+        dataset_name
+    ):
+
+        if dataset_name == "UNSW-NB15":
+
+            train_df = (
+                dataset.get_train_data()
+                .copy()
+            )
+
+            test_df = (
+                dataset.get_test_data()
+                .copy()
+            )
+
+        elif dataset_name == "CIC-IDS2017":
+
+            data = (
+                dataset.get_data()
+                .copy()
+            )
+
+            train_df, test_df = (
+                train_test_split(
+                    data,
+                    test_size=0.2,
+                    random_state=self.random_seed,
+                    stratify=data["label"]
+                )
+            )
+
+        else:
+
+            raise ValueError(
+                f"Unsupported dataset: "
+                f"{dataset_name}"
+            )
 
         return (
             train_df,

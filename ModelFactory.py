@@ -1,7 +1,7 @@
 from SetFit import SetFit
 from Proto import ProtoNet
 # from MAML import MAML
-# from Autoencoder import Autoencoder
+from Encoder import Encoder
 
 
 class ModelFactory:
@@ -42,19 +42,24 @@ class ModelFactory:
                 embedding_size=64
             )
 
-        
         elif model_name == "MAML":
-        
+
             return MAML(
                 unique_labels=unique_labels,
                 model_output_dir=model_output_dir,
                 random_seed=random_seed
             )
-        
+
         elif model_name == "Autoencoder":
-        
-            return Autoencoder(
-                unique_labels=unique_labels,
+
+            if input_size is None:
+                raise ValueError(
+                    "input_size is required for Autoencoder."
+                )
+
+            return Encoder(
+                input_dim=input_size,
+                num_classes=len(unique_labels),
                 model_output_dir=model_output_dir,
                 random_seed=random_seed
             )

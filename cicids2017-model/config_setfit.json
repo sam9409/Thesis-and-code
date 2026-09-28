@@ -1,5 +1,4 @@
 {
-  "normalize_embeddings": false,
   "labels": [
     "BENIGN",
     "Bot",
@@ -16,5 +15,6 @@
     "Web Attack \ufffd Brute Force",
     "Web Attack \ufffd Sql Injection",
     "Web Attack \ufffd XSS"
-  ]
+  ],
+  "normalize_embeddings": false
 }

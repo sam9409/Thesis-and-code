@@ -1,5 +1,4 @@
 {
-  "normalize_embeddings": false,
   "labels": [
     "Analysis",
     "Backdoor",
@@ -11,5 +10,6 @@
     "Reconnaissance",
     "Shellcode",
     "Worms"
-  ]
+  ],
+  "normalize_embeddings": false
 }
