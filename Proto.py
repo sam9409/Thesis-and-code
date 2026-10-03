@@ -13,20 +13,36 @@ class ProtoNet(nn.Module):
     ):
         super().__init__()
 
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.embedding_size = embedding_size
+
         self.embedding = nn.Sequential(
-            nn.Linear(input_size, hidden_size),
+            nn.Linear(
+                input_size,
+                hidden_size
+            ),
             nn.ReLU(),
 
-            nn.Linear(hidden_size, hidden_size),
+            nn.Linear(
+                hidden_size,
+                hidden_size
+            ),
             nn.ReLU(),
 
-            nn.Linear(hidden_size, embedding_size)
+            nn.Linear(
+                hidden_size,
+                embedding_size
+            )
         )
 
-
-    def forward(self, x):
-        return self.embedding(x)
-
+    def forward(
+        self,
+        x
+    ):
+        return self.embedding(
+            x
+        )
 
     def calculate_prototypes(
         self,
@@ -34,10 +50,11 @@ class ProtoNet(nn.Module):
         support_labels
     ):
 
-        prototypes = []
         labels = torch.unique(
             support_labels
         )
+
+        prototypes = []
 
         for label in labels:
 
@@ -47,14 +64,24 @@ class ProtoNet(nn.Module):
                 ]
             )
 
-            prototype = class_embeddings.mean(
-                dim=0
+            prototype = (
+                class_embeddings.mean(
+                    dim=0
+                )
             )
 
-            prototypes.append(prototype)
+            prototypes.append(
+                prototype
+            )
 
-        return torch.stack(prototypes), labels
+        prototypes = torch.stack(
+            prototypes
+        )
 
+        return (
+            prototypes,
+            labels
+        )
 
     def calculate_distances(
         self,
@@ -62,11 +89,12 @@ class ProtoNet(nn.Module):
         prototypes
     ):
 
-        return torch.cdist(
+        distances = torch.cdist(
             query_embeddings,
             prototypes
-        ) ** 2
+        )
 
+        return distances ** 2
 
     def episode_loss(
         self,
@@ -76,7 +104,6 @@ class ProtoNet(nn.Module):
         query_y
     ):
 
-        # Create embeddings
         support_embeddings = self(
             support_x
         )
@@ -85,7 +112,6 @@ class ProtoNet(nn.Module):
             query_x
         )
 
-        # Create prototypes
         prototypes, labels = (
             self.calculate_prototypes(
                 support_embeddings,
@@ -93,25 +119,18 @@ class ProtoNet(nn.Module):
             )
         )
 
-        # Calculate distances
-        distances = self.calculate_distances(
-            query_embeddings,
-            prototypes
+        distances = (
+            self.calculate_distances(
+                query_embeddings,
+                prototypes
+            )
         )
 
-        # Convert labels to prototype positions
-        targets = torch.tensor(
-            [
-                (labels == label)
-                .nonzero(as_tuple=True)[0]
-                .item()
-
-                for label in query_y
-            ],
-            device=query_y.device
+        targets = self.create_targets(
+            query_y,
+            labels
         )
 
-        # Negative distance = logits
         logits = -distances
 
         loss = F.cross_entropy(
@@ -120,3 +139,63 @@ class ProtoNet(nn.Module):
         )
 
         return loss
+
+    def create_targets(
+        self,
+        query_labels,
+        prototype_labels
+    ):
+
+        targets = []
+
+        for label in query_labels:
+
+            target = (
+                prototype_labels
+                == label
+            ).nonzero(
+                as_tuple=True
+            )[0].item()
+
+            targets.append(
+                target
+            )
+
+        return torch.tensor(
+            targets,
+            dtype=torch.long,
+            device=query_labels.device
+        )
+
+    def predict_from_prototypes(
+        self,
+        samples,
+        prototypes,
+        prototype_labels
+    ):
+
+        embeddings = self(
+            samples
+        )
+
+        distances = (
+            self.calculate_distances(
+                embeddings,
+                prototypes
+            )
+        )
+
+        nearest_prototypes = (
+            torch.argmin(
+                distances,
+                dim=1
+            )
+        )
+
+        predictions = (
+            prototype_labels[
+                nearest_prototypes
+            ]
+        )
+
+        return predictions

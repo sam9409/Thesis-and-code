@@ -1,144 +1,180 @@
 from dataPrep import dataPrep
 from UNSWDataPrepSetFit import UNSWDataPrepSetFit
-from ExperimentRunner import ExperimentRunner
-from Interface import interface
+
+from SetFitRunner import SetFitRunner
+from ProtoRunner import ProtoNetRunner
 
 
 def main():
-    random_seed = 42
-    test_size = 100
 
-    user_interface = interface()
+    print("\nSelect Model")
+    print("1 SetFit")
+    print("2 ProtoNet")
+    print("3 MAML")
+    print("4 Autoencoder")
 
-    model_choice = user_interface.select_model()
-    dataset_choice = user_interface.select_dataset()
-    shot_size = user_interface.select_shot_size()
-
-    print("\nEXPERIMENT SETTINGS")
-    print(f"Model: {model_choice}")
-    print(f"Dataset: {dataset_choice}")
-    print(f"Shot Size: {shot_size}")
-    print(f"Test Size: {test_size}")
-
-    runner = ExperimentRunner(
-        shot_size=shot_size,
-        test_size=test_size,
-        random_seed=random_seed
+    model_input = input(
+        "\nEnter model choice: "
     )
+
+    model_options = {
+        "1": "SetFit",
+        "2": "ProtoNet",
+        "3": "MAML",
+        "4": "Autoencoder"
+    }
+
+    if model_input not in model_options:
+        raise ValueError(
+            "Invalid model choice."
+        )
+
+    model_choice = model_options[
+        model_input
+    ]
+
+    print("\nSelect Dataset")
+    print("1 CIC-IDS2017")
+    print("2 UNSW-NB15")
+    print("3 Both")
+
+    dataset_input = input(
+        "\nEnter dataset choice: "
+    )
+
+    dataset_options = {
+        "1": "CIC-IDS2017",
+        "2": "UNSW-NB15",
+        "3": "Both"
+    }
+
+    if dataset_input not in dataset_options:
+        raise ValueError(
+            "Invalid dataset choice."
+        )
+
+    dataset_choice = dataset_options[
+        dataset_input
+    ]
+
+    print("\nSelect Shot Size")
+    print("1 5-shot")
+    print("2 10-shot")
+    print("3 20-shot")
+
+    shot_input = input(
+        "\nEnter shot size choice: "
+    )
+
+    shot_options = {
+        "1": 5,
+        "2": 10,
+        "3": 20
+    }
+
+    if shot_input not in shot_options:
+        raise ValueError(
+            "Invalid shot size choice."
+        )
+
+    shot_size = shot_options[
+        shot_input
+    ]
+
+    test_size = 100
+    random_seed = 42
+
+    if model_choice == "SetFit":
+
+        runner = SetFitRunner(
+            shot_size=shot_size,
+            test_size=test_size,
+            random_seed=random_seed,
+            batch_size=16,
+            num_epochs=1
+        )
+
+    elif model_choice == "ProtoNet":
+
+        runner = ProtoNetRunner(
+            shot_size=shot_size,
+            test_size=test_size,
+            random_seed=random_seed,
+            number_of_episodes=100,
+            learning_rate=0.001
+        )
+
+    elif model_choice == "MAML":
+
+        raise NotImplementedError(
+            "MAMLRunner has not been implemented yet."
+        )
+
+    elif model_choice == "Autoencoder":
+
+        raise NotImplementedError(
+            "AutoencoderRunner has not been implemented yet."
+        )
 
     cic_folder = (
         r"C:\Users\snmoh\Desktop\Thesis and code"
         r"\MachineLearningCSV\MachineLearningCVE"
     )
 
-    cic_model_output = (
-        r"C:\Users\snmoh\Desktop\Thesis and code"
-        r"\cicids2017-model"
-    )
-
     unsw_train_file = (
         r"C:\Users\snmoh\Desktop\Thesis and code"
-        r"\UNSWDATA\CSV Files\Training and Testing Sets"
+        r"\UNSWDATA\CSV Files"
+        r"\Training and Testing Sets"
         r"\UNSW_NB15_training-set.csv"
     )
 
     unsw_test_file = (
         r"C:\Users\snmoh\Desktop\Thesis and code"
-        r"\UNSWDATA\CSV Files\Training and Testing Sets"
+        r"\UNSWDATA\CSV Files"
+        r"\Training and Testing Sets"
         r"\UNSW_NB15_testing-set.csv"
     )
 
-    unsw_model_output = (
-        r"C:\Users\snmoh\Desktop\Thesis and code"
-        r"\unsw-nb15-model"
-    )
-
-    if dataset_choice == "CIC-IDS2017":
-
-        dataset = dataPrep(
-            folder_path=cic_folder
-        )
-
-        results = runner.run(
-            model_name=model_choice,
-            dataset=dataset,
-            dataset_name="CIC-IDS2017",
-            model_output_dir=cic_model_output
-        )
-
-        print("\nCIC-IDS2017 RESULTS")
-
-        for metric, value in results.items():
-            print(f"{metric}: {value}")
-
-
-    elif dataset_choice == "UNSW-NB15":
-
-        dataset = UNSWDataPrepSetFit(
-            train_file_path=unsw_train_file,
-            test_file_path=unsw_test_file
-        )
-
-        results = runner.run(
-            model_name=model_choice,
-            dataset=dataset,
-            dataset_name="UNSW-NB15",
-            model_output_dir=unsw_model_output
-        )
-
-        print("\nUNSW-NB15 RESULTS")
-
-        for metric, value in results.items():
-            print(f"{metric}: {value}")
-
-
-    elif dataset_choice == "Both":
-
-        print("\nSTARTING CIC-IDS2017")
+    if dataset_choice in (
+        "CIC-IDS2017",
+        "Both"
+    ):
 
         cic_dataset = dataPrep(
             folder_path=cic_folder
         )
 
-        cic_results = runner.run(
-            model_name=model_choice,
-            dataset=cic_dataset,
-            dataset_name="CIC-IDS2017",
-            model_output_dir=cic_model_output
+        cic_output_dir = (
+            rf"{model_choice.lower()}"
+            rf"-cicids2017-model"
         )
 
-        print("\nFINISHED CIC-IDS2017")
+        runner.run(
+            dataset=cic_dataset,
+            dataset_name="CIC-IDS2017",
+            model_output_dir=cic_output_dir
+        )
 
-        print("\nSTARTING UNSW-NB15")
+    if dataset_choice in (
+        "UNSW-NB15",
+        "Both"
+    ):
 
         unsw_dataset = UNSWDataPrepSetFit(
             train_file_path=unsw_train_file,
             test_file_path=unsw_test_file
         )
 
-        unsw_results = runner.run(
-            model_name=model_choice,
-            dataset=unsw_dataset,
-            dataset_name="UNSW-NB15",
-            model_output_dir=unsw_model_output
+        unsw_output_dir = (
+            rf"{model_choice.lower()}"
+            rf"-unsw-nb15-model"
         )
 
-        print("\nFINISHED UNSW-NB15")
-
-        print("\nFINAL RESULTS")
-
-        print("\nCIC-IDS2017 Results")
-
-        for metric, value in cic_results.items():
-            print(f"{metric}: {value}")
-
-        print("\nUNSW-NB15 Results")
-
-        for metric, value in unsw_results.items():
-            print(f"{metric}: {value}")
-
-
-    print("\nFINISHED")
+        runner.run(
+            dataset=unsw_dataset,
+            dataset_name="UNSW-NB15",
+            model_output_dir=unsw_output_dir
+        )
 
 
 if __name__ == "__main__":

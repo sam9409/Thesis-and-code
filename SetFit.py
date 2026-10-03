@@ -1,18 +1,21 @@
 from datasets import Dataset
-from setfit import SetFitModel, Trainer, TrainingArguments
-from modelStrategy import ModelStrategy
+from setfit import (
+    SetFitModel,
+    Trainer,
+    TrainingArguments
+)
 
 
-class SetFit(ModelStrategy):
+class SetFit:
 
     def __init__(
         self,
         unique_labels,
-        model_name: str = "sentence-transformers/all-MiniLM-L6-v2",
-        model_output_dir: str = "setfit_model",
-        batch_size: int = 16,
-        num_epochs: int = 1,
-        random_seed: int = 42
+        model_name="sentence-transformers/all-MiniLM-L6-v2",
+        model_output_dir="setfit_model",
+        batch_size=16,
+        num_epochs=1,
+        random_seed=42
     ):
 
         self.unique_labels = unique_labels
@@ -24,76 +27,21 @@ class SetFit(ModelStrategy):
 
         self.model = None
         self.trainer = None
-        self.train_dataset = None
-        self.test_dataset = None
 
-
-    def prepare_data(
-        self,
-        dataset,
-        train_df,
-        test_df
+    def load_model(
+        self
     ):
-
-        print("\nConverting data to text...")
-
-        train_df = dataset.convert_to_text(
-            train_df
-        )
-
-        test_df = dataset.convert_to_text(
-            test_df
-        )
-
-        self.create_datasets(
-            train_df=train_df,
-            test_df=test_df
-        )
-
-        self.load_model()
-        self.create_trainer()
-
-        return train_df, test_df
-
-
-    def create_datasets(
-        self,
-        train_df,
-        test_df
-    ):
-
-        self.train_dataset = Dataset.from_pandas(
-            train_df[["text", "label"]],
-            preserve_index=False
-        )
-
-        self.test_dataset = Dataset.from_pandas(
-            test_df[["text", "label"]],
-            preserve_index=False
-        )
-
-        print("\nTraining Dataset:")
-        print(self.train_dataset)
-
-        print("\nTest Dataset:")
-        print(self.test_dataset)
-
-        return (
-            self.train_dataset,
-            self.test_dataset
-        )
-
-
-    def load_model(self):
 
         print(
             f"\nLoading SetFit model: "
             f"{self.model_name}"
         )
 
-        self.model = SetFitModel.from_pretrained(
-            self.model_name,
-            labels=self.unique_labels
+        self.model = (
+            SetFitModel.from_pretrained(
+                self.model_name,
+                labels=self.unique_labels
+            )
         )
 
         print(
@@ -103,75 +51,95 @@ class SetFit(ModelStrategy):
 
         return self.model
 
+    def create_dataset(
+        self,
+        data
+    ):
 
-    def create_trainer(self):
+        return Dataset.from_pandas(
+            data[
+                [
+                    "text",
+                    "label"
+                ]
+            ],
+            preserve_index=False
+        )
 
-        training_args = TrainingArguments(
-            batch_size=self.batch_size,
-            num_epochs=self.num_epochs,
-            seed=self.random_seed
+    def create_trainer(
+        self,
+        train_dataset,
+        test_dataset=None
+    ):
+
+        training_args = (
+            TrainingArguments(
+                batch_size=self.batch_size,
+                num_epochs=self.num_epochs,
+                seed=self.random_seed
+            )
         )
 
         self.trainer = Trainer(
             model=self.model,
             args=training_args,
-            train_dataset=self.train_dataset,
-            eval_dataset=self.test_dataset
+            train_dataset=train_dataset,
+            eval_dataset=test_dataset
         )
-
-        print("\nTrainer created")
 
         return self.trainer
 
+    def train(
+        self,
+        train_dataset,
+        test_dataset=None
+    ):
 
-    def train(self):
+        if self.model is None:
+            self.load_model()
 
-        print("\nStarting SetFit training")
+        self.create_trainer(
+            train_dataset=train_dataset,
+            test_dataset=test_dataset
+        )
+
+        print(
+            "\nStarting SetFit training"
+        )
 
         self.trainer.train()
 
-        print("\nTraining complete")
-
-
-    def evaluate(self):
-
-        print("\nEvaluating model")
-
-        metrics = self.trainer.evaluate()
-
-        print("\nEvaluation Results:")
-
-        for name, value in metrics.items():
-            print(f"{name}: {value}")
-
-        return metrics
-
+        print(
+            "\nSetFit training complete"
+        )
 
     def predict(
         self,
         samples
     ):
 
+        if self.model is None:
+
+            raise ValueError(
+                "SetFit model has not been loaded."
+            )
+
         return self.model.predict(
             samples
         )
 
-
-    def get_test_samples(
-        self,
-        test_data
+    def save_model(
+        self
     ):
 
-        return (
-            test_data["text"]
-            .tolist()
-        )
+        if self.model is None:
 
-
-    def save_model(self):
+            raise ValueError(
+                "SetFit model has not been loaded."
+            )
 
         print(
-            f"\nSaving model to:\n"
+            f"\nSaving model to: "
             f"{self.model_output_dir}"
         )
 
@@ -179,26 +147,6 @@ class SetFit(ModelStrategy):
             self.model_output_dir
         )
 
-        print("\nModel saved")
-
-
-    def run_training(
-        self,
-        train_df,
-        test_df
-    ):
-
-        self.create_datasets(
-            train_df,
-            test_df
+        print(
+            "\nSetFit model saved"
         )
-
-        self.load_model()
-        self.create_trainer()
-        self.train()
-
-        metrics = self.evaluate()
-
-        self.save_model()
-
-        return metrics
