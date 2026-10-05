@@ -13,8 +13,8 @@ class SetFitRunner:
         self,
         shot_size=5,
         test_size=100,
-        random_seed=42,
-        batch_size=16,
+        random_seed=42, #need to pass form setfit
+        batch_size=16,  #need to pass form setfit
         num_epochs=1
     ):
 

@@ -1,0 +1,83 @@
+How my code works:
+
+main - the main is an interface that calls the runner of each model
+
+data prep - used only for SetFit and cicids2017 dataset 
+
+* loads the data from csvfiles
+removes whitespaces, 
+
+removes blank rows,
+
+converts csv data from numerical value to text. The data is already labelled by the columns so it labels all the numbers to text. I will need to change this method.     
+
+training split - 
+
+class means one unique value in the dataset’s label column.
+
+1) group by label - Take all rows that have the same value in the label column and treat them as one group.
+
+2) Shuffle each class - so that not always the same mix for training 
+
+3) take N sample for taring 
+
+4) use remaining samples for testing 
+
+5) combine classes for training and test sets 
+
+6) validate shot size 
+
+7) Check for overlap
+
+
+8) create Train/Test DataFrames split 
+
+SetFit 
+
+constructor sets - 
+unique_labels - class attack names after encoded 
+model_name - name of setfit model used 
+model_output_dir - where to store model
+batch_size
+num_epochs
+random_seed - make sure same random seed applied to all models 
+
+
+load model - loads model to be used by runner 
+
+create data set - converts a Pandas DataFrame into a Hugging Face Dataset 
+
+create trainer - create setfit trainer and pass it batch, epoch, and random seed 
+
+train - run the setfit trainer 
+
+predict - runs setfit predict 
+
+save _model -> saves model
+
+
+SetFitRunner 
+
+run - takes in the data set and runs the load, clean, and encode from training split, then creates the test and train data frames, then runs the convert to text function then crates the setfit object, trains, run evualtor class and then saves. 
+
+evaluate - Uses the shared Evaluator to measure predictions, accuracy, precision, recall, F1, latency, throughput, and confusion matrix.
+
+create_split - Chooses the correct splitting method depending on whether the dataset is CIC-IDS2017 or UNSW-NB15.
+    
+create_cic_split - Creates the few-shot training and testing split for CIC-IDS2017 using trainingSplit.
+    
+create_unsw_split - Creates the few-shot training and testing split for UNSW-NB15 using its existing train and test datasets.
+    
+SetFit model creation - Creates the SetFit object with the correct labels and training settings.
+    
+convert_to_text - Converts network-flow records into text before SetFit training.
+    
+model.create_dataset - Converts the Pandas DataFrames into SetFit-compatible datasets.
+    
+model.train - Trains the SetFit model.
+    
+model.save_model - Saves the trained SetFit model.
+
+
+
+ 
