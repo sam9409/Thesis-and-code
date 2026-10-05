@@ -20,7 +20,6 @@ class EncoderNetwork(nn.Module):
         embedding_dim=32,
         dropout=0.2
     ):
-
         super().__init__()
 
         self.encoder = nn.Sequential(
@@ -68,7 +67,6 @@ class EncoderNetwork(nn.Module):
             num_classes
         )
 
-
     def forward(
         self,
         x
@@ -83,7 +81,6 @@ class EncoderNetwork(nn.Module):
         )
 
         return logits
-
 
     def get_embedding(
         self,
@@ -105,17 +102,51 @@ class Encoder:
         random_seed=42,
         learning_rate=0.001,
         batch_size=64,
-        epochs=20
+        epochs=20,
+        hidden_dim1=128,
+        hidden_dim2=64,
+        embedding_dim=32,
+        dropout=0.2
     ):
 
         self.input_dim = input_dim
         self.num_classes = num_classes
-        self.model_output_dir = model_output_dir
-        self.random_seed = random_seed
 
-        self.learning_rate = learning_rate
-        self.batch_size = batch_size
-        self.epochs = epochs
+        self.model_output_dir = (
+            model_output_dir
+        )
+
+        self.random_seed = (
+            random_seed
+        )
+
+        self.learning_rate = (
+            learning_rate
+        )
+
+        self.batch_size = (
+            batch_size
+        )
+
+        self.epochs = (
+            epochs
+        )
+
+        self.hidden_dim1 = (
+            hidden_dim1
+        )
+
+        self.hidden_dim2 = (
+            hidden_dim2
+        )
+
+        self.embedding_dim = (
+            embedding_dim
+        )
+
+        self.dropout = (
+            dropout
+        )
 
         torch.manual_seed(
             self.random_seed
@@ -151,7 +182,11 @@ class Encoder:
 
         self.model = EncoderNetwork(
             input_dim=self.input_dim,
-            num_classes=self.num_classes
+            num_classes=self.num_classes,
+            hidden_dim1=self.hidden_dim1,
+            hidden_dim2=self.hidden_dim2,
+            embedding_dim=self.embedding_dim,
+            dropout=self.dropout
         ).to(
             self.device
         )
@@ -167,7 +202,9 @@ class Encoder:
             )
         )
 
-        self.scaler = StandardScaler()
+        self.scaler = (
+            StandardScaler()
+        )
 
         self.feature_columns = None
 
@@ -177,10 +214,8 @@ class Encoder:
         self.X_test = None
         self.y_test = None
 
-
     def prepare_data(
         self,
-        dataset,
         train_df,
         test_df
     ):
@@ -189,27 +224,11 @@ class Encoder:
             "\nPreparing encoder data..."
         )
 
-        self.feature_columns = []
-
-        for column in train_df.columns:
-
-            if column == "label":
-                continue
-
-            if pd.api.types.is_numeric_dtype(
-                train_df[column]
-            ):
-
-                self.feature_columns.append(
-                    column
-                )
-
-        if not self.feature_columns:
-
-            raise ValueError(
-                "No numeric features found "
-                "for Encoder."
+        self.feature_columns = (
+            self.get_feature_columns(
+                train_df
             )
+        )
 
         if (
             len(self.feature_columns)
@@ -217,7 +236,8 @@ class Encoder:
         ):
 
             raise ValueError(
-                f"Expected {self.input_dim} "
+                f"Expected "
+                f"{self.input_dim} "
                 f"input features but found "
                 f"{len(self.feature_columns)}."
             )
@@ -257,14 +277,18 @@ class Encoder:
         )
 
         y_train = (
-            train_df["label"]
+            train_df[
+                "label"
+            ]
             .to_numpy(
                 dtype=np.int64
             )
         )
 
         y_test = (
-            test_df["label"]
+            test_df[
+                "label"
+            ]
             .to_numpy(
                 dtype=np.int64
             )
@@ -285,7 +309,8 @@ class Encoder:
         )
 
         X_train = (
-            self.scaler.fit_transform(
+            self.scaler
+            .fit_transform(
                 X_train
             )
             .astype(
@@ -294,7 +319,8 @@ class Encoder:
         )
 
         X_test = (
-            self.scaler.transform(
+            self.scaler
+            .transform(
                 X_test
             )
             .astype(
@@ -323,6 +349,34 @@ class Encoder:
             test_data
         )
 
+    def get_feature_columns(
+        self,
+        data
+    ):
+
+        feature_columns = []
+
+        for column in data.columns:
+
+            if column == "label":
+                continue
+
+            if pd.api.types.is_numeric_dtype(
+                data[column]
+            ):
+
+                feature_columns.append(
+                    column
+                )
+
+        if not feature_columns:
+
+            raise ValueError(
+                "No numeric features "
+                "found for Encoder."
+            )
+
+        return feature_columns
 
     def train(
         self
@@ -355,7 +409,8 @@ class Encoder:
 
         drop_last = (
             len(training_dataset)
-            % self.batch_size == 1
+            % self.batch_size
+            == 1
         )
 
         training_loader = (
@@ -397,9 +452,7 @@ class Encoder:
         ):
 
             total_loss = 0.0
-
             correct = 0
-
             total = 0
 
             for (
@@ -458,7 +511,8 @@ class Encoder:
             )
 
             accuracy = (
-                correct / total
+                correct
+                / total
             )
 
             print(
@@ -474,7 +528,6 @@ class Encoder:
         print(
             "\nEncoder training complete."
         )
-
 
     def predict(
         self,
@@ -517,9 +570,10 @@ class Encoder:
         return [
             int(value)
             for value
-            in predictions.cpu().numpy()
+            in predictions
+            .cpu()
+            .numpy()
         ]
-
 
     def predict_one(
         self,
@@ -527,21 +581,25 @@ class Encoder:
     ):
 
         predictions = self.predict(
-            [X]
+            X
         )
 
         return predictions[0]
 
-
-    def get_test_samples(
-        self,
-        test_data
+    def get_test_data(
+        self
     ):
 
-        X_test, _ = test_data
+        if self.X_test is None:
 
-        return X_test
+            raise ValueError(
+                "Test data has not been prepared."
+            )
 
+        return (
+            self.X_test,
+            self.y_test
+        )
 
     def get_embeddings(
         self,
@@ -582,7 +640,6 @@ class Encoder:
             .numpy()
         )
 
-
     def save_model(
         self
     ):
@@ -607,6 +664,18 @@ class Encoder:
 
                 "num_classes":
                     self.num_classes,
+
+                "hidden_dim1":
+                    self.hidden_dim1,
+
+                "hidden_dim2":
+                    self.hidden_dim2,
+
+                "embedding_dim":
+                    self.embedding_dim,
+
+                "dropout":
+                    self.dropout,
 
                 "feature_columns":
                     self.feature_columns,

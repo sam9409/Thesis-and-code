@@ -3,6 +3,7 @@ from UNSWDataPrepSetFit import UNSWDataPrepSetFit
 
 from SetFitRunner import SetFitRunner
 from ProtoRunner import ProtoNetRunner
+from EncoderRunner import EncoderRunner 
 
 
 def main():
@@ -112,8 +113,12 @@ def main():
 
     elif model_choice == "Autoencoder":
 
-        raise NotImplementedError(
-            "AutoencoderRunner has not been implemented yet."
+        runner = EncoderRunner(
+            test_size=test_size,
+            random_seed=random_seed,
+            learning_rate=0.001,
+            batch_size=64,
+            epochs=20
         )
 
     cic_folder = (
