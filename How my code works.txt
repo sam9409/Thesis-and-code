@@ -15,22 +15,21 @@ training split -
 
 class means one unique value in the dataset’s label column.
 
-1) group by label - Take all rows that have the same value in the label column and treat them as one group.
+- group by label - Take all rows that have the same value in the label column and treat them as one group.
 
-2) Shuffle each class - so that not always the same mix for training 
+- Shuffle each class - so that not always the same mix for training 
 
-3) take N sample for taring 
+- take N sample for taring 
 
-4) use remaining samples for testing 
+- use remaining samples for testing 
 
-5) combine classes for training and test sets 
+- combine classes for training and test sets 
 
-6) validate shot size 
+- validate shot size 
 
-7) Check for overlap
+- Check for overlap
 
-
-8) create Train/Test DataFrames split 
+- create Train/Test DataFrames split 
 
 SetFit 
 
@@ -43,40 +42,186 @@ num_epochs
 random_seed - make sure same random seed applied to all models 
 
 
-load model - loads model to be used by runner 
+- load model - loads model to be used by runner 
 
-create data set - converts a Pandas DataFrame into a Hugging Face Dataset 
+- create data set - converts a Pandas DataFrame into a Hugging Face Dataset 
 
-create trainer - create setfit trainer and pass it batch, epoch, and random seed 
+- create trainer - create setfit trainer and pass it batch, epoch, and random seed 
 
-train - run the setfit trainer 
+- train - run the setfit trainer 
 
-predict - runs setfit predict 
+- predict - runs setfit predict 
 
-save _model -> saves model
+- save _model -> saves model
 
 
 SetFitRunner 
 
 run - takes in the data set and runs the load, clean, and encode from training split, then creates the test and train data frames, then runs the convert to text function then crates the setfit object, trains, run evualtor class and then saves. 
 
-evaluate - Uses the shared Evaluator to measure predictions, accuracy, precision, recall, F1, latency, throughput, and confusion matrix.
+evaluate - uses the shared Evaluator to measure predictions, accuracy, precision, recall, F1, latency, throughput, and confusion matrix.
 
-create_split - Chooses the correct splitting method depending on whether the dataset is CIC-IDS2017 or UNSW-NB15.
+create_split - chooses the correct splitting method depending on whether the dataset is CIC-IDS2017 or UNSW-NB15.
     
-create_cic_split - Creates the few-shot training and testing split for CIC-IDS2017 using trainingSplit.
+create_cic_split - creates the few-shot training and testing split for CIC-IDS2017 using trainingSplit.
     
-create_unsw_split - Creates the few-shot training and testing split for UNSW-NB15 using its existing train and test datasets.
+create_unsw_split - creates the few-shot training and testing split for UNSW-NB15 using its existing train and test datasets.
     
-SetFit model creation - Creates the SetFit object with the correct labels and training settings.
+SetFit model creation - creates the SetFit object with the correct labels and training settings.
     
-convert_to_text - Converts network-flow records into text before SetFit training.
+convert_to_text - converts network-flow records into text before SetFit training.
     
-model.create_dataset - Converts the Pandas DataFrames into SetFit-compatible datasets.
+model.create_dataset - converts the Pandas DataFrames into SetFit-compatible datasets.
     
-model.train - Trains the SetFit model.
+model.train - trains the SetFit model.
     
-model.save_model - Saves the trained SetFit model.
+model.save_model - saves the trained SetFit model.
+
+
+
+Encoder
+- Constructor - builds the neural network layers used to create embeddings and classify traffic, stores model settings, sets the random seed, selects CPU or GPU, creates the network, loss function, optimizer, scaler, and data placeholders
+
+- forward - passes input through the encoder and classifier to produce predictions.
+
+- get_embedding - returns the learned embedding representation without using the final classifier.
+
+- prepare_data - selects numeric features, removes invalid values, converts labels to arrays, scales the features, and prepares the training and testing data
+
+- get_feature_columns - finds all numeric input columns except the label column
+
+- train - creates training batches and trains the neural network using cross-entropy loss and the Adam optimizer
+
+- predict - predicts the class labels for one or more input samples
+
+- predict_one - predicts the class label for a single sample
+
+- get_test_data - returns the prepared test features and test labels
+
+- save_model - saves the trained model, model settings, selected features, and scaler information to a file
+
+
+Encoder Runner 
+- Constructor - keeps experiment settings such as test size, random seed, learning rate, batch size, and epochs. Need to standardize this
+
+- run - run the full experiment from dataset preparation through training, evaluation, and saving.
+
+- prepare_dataset loads the selected dataset, clean it, and encodes the labels.
+
+create_split - creates the training and testing datasets.
+- CIC-IDS2017 uses an 80/20 train-test split.
+- UNSW-NB15 uses its existing training and testing files.
+
+-get_feature_columns - finds the numeric feature columns used as Encoder inputs.
+
+- Encoder creation - creates the Encoder using the number of input features, number of classes, and training settings.
+
+- model.prepare_data - cleans numeric values, scales the features, and prepares the training and testing arrays.
+
+- model.train - trains the Encoder neural network.
+
+- evaluate - uses the shared Evaluator to measure predictions, accuracy, precision, recall, F1, latency, throughput, and confusion matrix.
+
+- model.predict_one - predicts the class of one test sample at a time during evaluation.
+
+- model.save_model - saves the trained Encoder and its configuration.
+
+
+ProtoNetPrep 
+
+- Constructor - keeps the few-shot episode settings: support shot size, query size, and random seed.
+
+- create_episode - builds one ProtoNet training episode containing support samples and query samples.
+
+- labels - gets all unique class labels from the dataset. Consistency 
+
+- required_samples - calculates how many samples each class needs:
+  support samples + query samples.
+
+- class_data - selects all rows belonging to one class.
+
+- sample selection - randomly selects the required number of samples from each class.
+
+- support set - takes the first N samples from each class for the support set.
+
+- query set - takes the remaining selected samples from each class for the query set.
+
+- support_x - keeps the feature values for support samples.
+
+- support_y - keeps the class labels for support samples.
+
+- query_x - keeps the feature values for query samples.
+
+- query_y - keeps the class labels for query samples.
+
+- insufficient classes - skips any class that does not have enough samples for both support and query sets.
+
+- NumPy to PyTorch - combines the selected samples and converts them into PyTorch tensors.
+
+- return values - returns support features, support labels, query features, and query labels for ProtoNet training.
+
+Proto 
+
+constructor - creates the protonet embedding network and stores the input, hidden, and embedding sizes
+
+forward - passes input samples through the embedding network
+
+calculate_prototypes - calculates the mean embedding for each class to create its prototype
+
+calculate_distances - calculates the squared euclidean distance between query embeddings and class prototypes
+
+episode_loss - performs one protonet training episode and calculates the cross-entropy loss
+
+create_targets - converts the original class labels into prototype positions used by the loss function
+
+predict_from_prototypes - predicts each sample by finding the nearest class prototype
+
+embedding - transforms the original network traffic features into a smaller learned representation
+
+support embeddings - embeddings created from the support samples
+
+query embeddings - embeddings created from the query samples
+
+prototypes - average embeddings representing each class
+
+distances - measures how close each query sample is to each class prototype
+
+logits - negative distances used by cross-entropy loss so closer prototypes receive higher scores
+
+ProtoNet Runner 
+constructor - stores protonet experiment settings such as shot size, test size, random seed, number of episodes, and learning rate
+
+run - runs the full protonet experiment from dataset preparation to training, evaluation, and saving
+
+prepare_dataset - loads the dataset, cleans it, and encodes the labels
+
+train - trains protonet using multiple few-shot episodes with support and query samples
+
+create_prototypes - creates one prototype for each class from the support samples
+
+evaluate - tests the model and calculates accuracy, precision, recall, f1, latency, throughput, and confusion matrix
+
+get_data_pools - creates or retrieves the training and testing pools for the selected dataset
+
+get_feature_columns - finds the numeric input features used by protonet
+
+create_support_set - selects the n-shot support samples used to build the final class prototypes
+
+create_test_set - selects the test samples used for evaluation
+
+save_model - saves the trained protonet, prototypes, labels, feature information, and experiment settings
+
+protonetprep - creates the support and query sets used during episodic training
+
+protonet - creates embeddings, calculates prototypes and distances, and computes the training loss
+
+evaluator - calculates the final performance metrics and confusion matrix
+
+
+
+
+
+
 
 
 
