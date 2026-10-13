@@ -4,6 +4,7 @@ from UNSWDataPrepSetFit import UNSWDataPrepSetFit
 from SetFitRunner import SetFitRunner
 from ProtoRunner import ProtoNetRunner
 from EncoderRunner import EncoderRunner 
+from MAMLRunner import MAMLRunner
 
 
 def main():
@@ -107,10 +108,18 @@ def main():
 
     elif model_choice == "MAML":
 
-        raise NotImplementedError(
-            "MAMLRunner has not been implemented yet."
-        )
+            runner = MAMLRunner(
+                shot_size=shot_size,
+                query_size=5,
+                random_seed=42,
+                inner_lr=0.01,
+                outer_lr=0.001,
+                inner_steps=5,
+                meta_batch_size=4,
+                meta_epochs=100
+            )
 
+          
     elif model_choice == "Autoencoder":
 
         runner = EncoderRunner(
