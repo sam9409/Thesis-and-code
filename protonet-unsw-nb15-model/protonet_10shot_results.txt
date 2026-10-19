@@ -1,0 +1,13 @@
+Model: ProtoNet
+Dataset: UNSW-NB15
+Shot Size: 10
+
+Evaluation Results
+accuracy: 0.18220338983050846
+macro_precision: 0.1497379914768057
+macro_recall: 0.172
+macro_f1: 0.13183370990753474
+average_latency_ms: 0.2857285001220466
+median_latency_ms: 0.2745500532910228
+worst_latency_ms: 1.6324000898748636
+throughput_samples_per_second: 3486.5133983919477

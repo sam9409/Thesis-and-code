@@ -1,4 +1,3 @@
-
 import os
 import time
 import random
@@ -66,6 +65,7 @@ class MAMLRunner:
             torch.cuda.manual_seed_all(random_seed)
 
         self.rng = np.random.default_rng(random_seed)
+        self.skipped_classes = set()
 
 
     def prepare_data(self, dataset):
@@ -284,10 +284,14 @@ class MAMLRunner:
             # Every class needs enough support samples
             # and at least one separate query sample.
             if available < self.shot_size + 1:
-                raise ValueError(
-                    f"Class {label} has {available} samples. "
-                    f"At least {self.shot_size + 1} are required."
-                )
+                if int(label) not in self.skipped_classes:
+                    print(
+                        f"Skipping class {label} during training: "
+                        f"{available} samples available, "
+                        f"{self.shot_size + 1} required."
+                    )
+                    self.skipped_classes.add(int(label))
+                continue
 
             actual_query_size = min(
                 query_size,
@@ -310,6 +314,12 @@ class MAMLRunner:
 
             query_indices.extend(
                 selected[self.shot_size:]
+            )
+
+        if not support_indices or not query_indices:
+            raise ValueError(
+                "No eligible classes have enough samples "
+                "to create a MAML episode."
             )
 
         support_x = torch.tensor(
@@ -402,11 +412,12 @@ class MAMLRunner:
                 y_train == label
             )[0]
 
-            if len(class_indices) < self.shot_size:
-                raise ValueError(
-                    f"Class {label} has insufficient "
-                    f"training samples for adaptation."
+            if int(label) in self.skipped_classes or len(class_indices) < self.shot_size:
+                print(
+                    f"Skipping class {label} during final adaptation: "
+                    f"{len(class_indices)} training samples available."
                 )
+                continue
 
             selected = self.rng.choice(
                 class_indices,
@@ -415,6 +426,18 @@ class MAMLRunner:
             )
 
             support_indices.extend(selected)
+
+        if not support_indices:
+            raise ValueError(
+                "No eligible classes remain for final adaptation."
+            )
+
+        if self.skipped_classes:
+            print(
+                "Warning: skipped classes remain in the held-out test "
+                "set and in the model output space. Their metrics "
+                "should not be interpreted as fully trained classes."
+            )
 
         support_x = torch.tensor(
             X_train[support_indices],
@@ -584,6 +607,8 @@ class MAMLRunner:
 
         X_train, y_train = train_data
         X_test, y_test = test_data
+
+        self.skipped_classes = set()
 
         model = MAML(
             input_size=input_size,

@@ -1,0 +1,13 @@
+Model: Autoencoder
+Dataset: CIC-IDS2017
+Shot Size: None
+
+Evaluation Results
+accuracy: 0.9591867405971964
+macro_precision: 0.7108785428917778
+macro_recall: 0.6219587126635975
+macro_f1: 0.6226481534812698
+average_latency_ms: 0.38841818284355795
+median_latency_ms: 0.3847000189125538
+worst_latency_ms: 169.38189999200404
+throughput_samples_per_second: 2569.5709356781213

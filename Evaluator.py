@@ -1,5 +1,6 @@
 import time
 import numpy as np
+import os
 
 from sklearn.metrics import (
     accuracy_score,
@@ -197,3 +198,81 @@ class Evaluator:
                 f"{metric}: "
                 f"{value}"
             )
+
+    import os
+
+
+    @staticmethod
+    def save_results(
+        results,
+        model_name,
+        dataset_name,
+        model_output_dir,
+        shot_size=None,
+        experiment_settings=None
+    ):
+
+        os.makedirs(
+            model_output_dir,
+            exist_ok=True
+        )
+
+        shot_label = (
+            f"{shot_size}shot"
+            if shot_size is not None
+            else "traditional"
+        )
+
+        file_name = (
+            f"{model_name.lower()}_"
+            f"{shot_label}_results.txt"
+        )
+
+        file_path = os.path.join(
+            model_output_dir,
+            file_name
+        )
+
+        with open(
+            file_path,
+            "w",
+            encoding="utf-8"
+        ) as file:
+
+            file.write(
+                f"Model: {model_name}\n"
+            )
+
+            file.write(
+                f"Dataset: {dataset_name}\n"
+            )
+
+            file.write(
+                f"Shot Size: {shot_size}\n"
+            )
+
+            if experiment_settings:
+
+                file.write(
+                    "\nExperiment Settings\n"
+                )
+
+                for key, value in experiment_settings.items():
+                    file.write(
+                        f"{key}: {value}\n"
+                    )
+
+            file.write(
+                "\nEvaluation Results\n"
+            )
+
+            for metric, value in results.items():
+                file.write(
+                    f"{metric}: {value}\n"
+                )
+
+        print(
+            f"Results saved to: {file_path}"
+        )
+
+        return file_path

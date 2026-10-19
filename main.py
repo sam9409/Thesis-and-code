@@ -1,10 +1,12 @@
+
 from dataPrep import dataPrep
 from UNSWDataPrepSetFit import UNSWDataPrepSetFit
 
 from SetFitRunner import SetFitRunner
 from ProtoRunner import ProtoNetRunner
-from EncoderRunner import EncoderRunner 
+from EncoderRunner import EncoderRunner
 from MAMLRunner import MAMLRunner
+from Evaluator import Evaluator
 
 
 def main():
@@ -59,32 +61,35 @@ def main():
         dataset_input
     ]
 
-    print("\nSelect Shot Size")
-    print("1 5-shot")
-    print("2 10-shot")
-    print("3 20-shot")
-
-    shot_input = input(
-        "\nEnter shot size choice: "
-    )
-
-    shot_options = {
-        "1": 5,
-        "2": 10,
-        "3": 20
-    }
-
-    if shot_input not in shot_options:
-        raise ValueError(
-            "Invalid shot size choice."
-        )
-
-    shot_size = shot_options[
-        shot_input
-    ]
-
     test_size = 100
     random_seed = 42
+    shot_size = None
+
+    if model_choice != "Autoencoder":
+
+        print("\nSelect Shot Size")
+        print("1 5-shot")
+        print("2 10-shot")
+        print("3 20-shot")
+
+        shot_input = input(
+            "\nEnter shot size choice: "
+        )
+
+        shot_options = {
+            "1": 5,
+            "2": 10,
+            "3": 20
+        }
+
+        if shot_input not in shot_options:
+            raise ValueError(
+                "Invalid shot size choice."
+            )
+
+        shot_size = shot_options[
+            shot_input
+        ]
 
     if model_choice == "SetFit":
 
@@ -108,22 +113,22 @@ def main():
 
     elif model_choice == "MAML":
 
-            runner = MAMLRunner(
-                shot_size=shot_size,
-                query_size=5,
-                random_seed=42,
-                inner_lr=0.01,
-                outer_lr=0.001,
-                inner_steps=5,
-                meta_batch_size=4,
-                meta_epochs=100
-            )
+        runner = MAMLRunner(
+            shot_size=shot_size,
+            query_size=5,
+            test_size=test_size,
+            random_seed=random_seed,
+            inner_lr=0.01,
+            outer_lr=0.001,
+            inner_steps=5,
+            meta_batch_size=4,
+            meta_epochs=100
+        )
 
-          
     elif model_choice == "Autoencoder":
 
         runner = EncoderRunner(
-            test_size=test_size,
+            test_size=0.2,
             random_seed=random_seed,
             learning_rate=0.001,
             batch_size=64,
@@ -159,15 +164,31 @@ def main():
         )
 
         cic_output_dir = (
-            rf"{model_choice.lower()}"
-            rf"-cicids2017-model"
+            f"{model_choice.lower()}"
+            f"-cicids2017-model"
         )
 
-        runner.run(
+        results = runner.run(
             dataset=cic_dataset,
             dataset_name="CIC-IDS2017",
             model_output_dir=cic_output_dir
         )
+
+        if results is not None:
+
+            Evaluator.save_results(
+                results=results,
+                model_name=model_choice,
+                dataset_name="CIC-IDS2017",
+                model_output_dir=cic_output_dir,
+                shot_size=shot_size
+            )
+
+        else:
+            print(
+                "Warning: CIC-IDS2017 runner did "
+                "not return evaluation results."
+            )
 
     if dataset_choice in (
         "UNSW-NB15",
@@ -180,15 +201,31 @@ def main():
         )
 
         unsw_output_dir = (
-            rf"{model_choice.lower()}"
-            rf"-unsw-nb15-model"
+            f"{model_choice.lower()}"
+            f"-unsw-nb15-model"
         )
 
-        runner.run(
+        results = runner.run(
             dataset=unsw_dataset,
             dataset_name="UNSW-NB15",
             model_output_dir=unsw_output_dir
         )
+
+        if results is not None:
+
+            Evaluator.save_results(
+                results=results,
+                model_name=model_choice,
+                dataset_name="UNSW-NB15",
+                model_output_dir=unsw_output_dir,
+                shot_size=shot_size
+            )
+
+        else:
+            print(
+                "Warning: UNSW-NB15 runner did "
+                "not return evaluation results."
+            )
 
 
 if __name__ == "__main__":
