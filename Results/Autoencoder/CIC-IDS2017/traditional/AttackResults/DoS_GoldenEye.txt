@@ -1,0 +1,15 @@
+Model: Autoencoder
+Dataset: CIC-IDS2017
+Shot Size: traditional
+Attack: DoS GoldenEye
+Encoded Label: 3
+
+Attack Evaluation Results
+precision: 0.9948927477017364
+recall: 0.9460903351141331
+f1_score: 0.9698780184217077
+support: 2059
+true_positives: 1948
+true_negatives: 563507
+false_positives: 10
+false_negatives: 111

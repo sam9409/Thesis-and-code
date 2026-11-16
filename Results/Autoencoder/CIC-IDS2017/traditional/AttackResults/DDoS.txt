@@ -1,0 +1,15 @@
+Model: Autoencoder
+Dataset: CIC-IDS2017
+Shot Size: traditional
+Attack: DDoS
+Encoded Label: 2
+
+Attack Evaluation Results
+precision: 0.9993251022271626
+recall: 0.9830892403827377
+f1_score: 0.9911406859077844
+support: 25605
+true_positives: 25172
+true_negatives: 539954
+false_positives: 17
+false_negatives: 433

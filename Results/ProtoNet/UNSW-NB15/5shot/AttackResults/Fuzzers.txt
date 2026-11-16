@@ -1,0 +1,15 @@
+Model: ProtoNet
+Dataset: UNSW-NB15
+Shot Size: 5shot
+Attack: Fuzzers
+Encoded Label: 4
+
+Attack Evaluation Results
+precision: 0.2037037037037037
+recall: 0.11
+f1_score: 0.14285714285714285
+support: 100
+true_positives: 11
+true_negatives: 801
+false_positives: 43
+false_negatives: 89

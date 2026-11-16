@@ -1,0 +1,15 @@
+Model: ProtoNet
+Dataset: UNSW-NB15
+Shot Size: 10shot
+Attack: Generic
+Encoded Label: 5
+
+Attack Evaluation Results
+precision: 0.2156398104265403
+recall: 0.91
+f1_score: 0.3486590038314176
+support: 100
+true_positives: 91
+true_negatives: 513
+false_positives: 331
+false_negatives: 9

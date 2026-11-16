@@ -1,0 +1,15 @@
+Model: Autoencoder
+Dataset: CIC-IDS2017
+Shot Size: traditional
+Attack: Infiltration
+Encoded Label: 9
+
+Attack Evaluation Results
+precision: 0.0
+recall: 0.0
+f1_score: 0.0
+support: 7
+true_positives: 0
+true_negatives: 565569
+false_positives: 0
+false_negatives: 7

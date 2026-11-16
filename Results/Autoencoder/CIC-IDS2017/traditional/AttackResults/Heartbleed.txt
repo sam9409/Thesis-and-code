@@ -1,0 +1,15 @@
+Model: Autoencoder
+Dataset: CIC-IDS2017
+Shot Size: traditional
+Attack: Heartbleed
+Encoded Label: 8
+
+Attack Evaluation Results
+precision: 0.6666666666666666
+recall: 1.0
+f1_score: 0.8
+support: 2
+true_positives: 2
+true_negatives: 565573
+false_positives: 1
+false_negatives: 0

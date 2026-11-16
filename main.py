@@ -1,4 +1,3 @@
-
 from dataPrep import dataPrep
 from UNSWDataPrepSetFit import UNSWDataPrepSetFit
 
@@ -11,221 +10,261 @@ from Evaluator import Evaluator
 
 def main():
 
-    print("\nSelect Model")
-    print("1 SetFit")
-    print("2 ProtoNet")
-    print("3 MAML")
-    print("4 Autoencoder")
+    while True:
 
-    model_input = input(
-        "\nEnter model choice: "
-    )
+        print("\nSelect Model")
+        print("1 SetFit")
+        print("2 ProtoNet")
+        print("3 MAML")
+        print("4 Autoencoder")
+        print("0 Exit")
 
-    model_options = {
-        "1": "SetFit",
-        "2": "ProtoNet",
-        "3": "MAML",
-        "4": "Autoencoder"
-    }
-
-    if model_input not in model_options:
-        raise ValueError(
-            "Invalid model choice."
+        model_input = input(
+            "\nEnter model choice: "
         )
 
-    model_choice = model_options[
-        model_input
-    ]
+        if model_input == "0":
 
-    print("\nSelect Dataset")
-    print("1 CIC-IDS2017")
-    print("2 UNSW-NB15")
-    print("3 Both")
+            print("Exiting program.")
+            break
 
-    dataset_input = input(
-        "\nEnter dataset choice: "
-    )
-
-    dataset_options = {
-        "1": "CIC-IDS2017",
-        "2": "UNSW-NB15",
-        "3": "Both"
-    }
-
-    if dataset_input not in dataset_options:
-        raise ValueError(
-            "Invalid dataset choice."
-        )
-
-    dataset_choice = dataset_options[
-        dataset_input
-    ]
-
-    test_size = 100
-    random_seed = 42
-    shot_size = None
-
-    if model_choice != "Autoencoder":
-
-        print("\nSelect Shot Size")
-        print("1 5-shot")
-        print("2 10-shot")
-        print("3 20-shot")
-
-        shot_input = input(
-            "\nEnter shot size choice: "
-        )
-
-        shot_options = {
-            "1": 5,
-            "2": 10,
-            "3": 20
+        model_options = {
+            "1": "SetFit",
+            "2": "ProtoNet",
+            "3": "MAML",
+            "4": "Autoencoder"
         }
 
-        if shot_input not in shot_options:
-            raise ValueError(
-                "Invalid shot size choice."
-            )
+        if model_input not in model_options:
 
-        shot_size = shot_options[
-            shot_input
+            print("Invalid model choice.")
+            continue
+
+        model_choice = model_options[
+            model_input
         ]
 
-    if model_choice == "SetFit":
+        print("\nSelect Dataset")
+        print("1 CIC-IDS2017")
+        print("2 UNSW-NB15")
+        print("3 Both")
 
-        runner = SetFitRunner(
-            shot_size=shot_size,
-            test_size=test_size,
-            random_seed=random_seed,
-            batch_size=16,
-            num_epochs=1
+        dataset_input = input(
+            "\nEnter dataset choice: "
         )
 
-    elif model_choice == "ProtoNet":
+        dataset_options = {
+            "1": "CIC-IDS2017",
+            "2": "UNSW-NB15",
+            "3": "Both"
+        }
 
-        runner = ProtoNetRunner(
-            shot_size=shot_size,
-            test_size=test_size,
-            random_seed=random_seed,
-            number_of_episodes=100,
-            learning_rate=0.001
+        if dataset_input not in dataset_options:
+
+            print("Invalid dataset choice.")
+            continue
+
+        dataset_choice = dataset_options[
+            dataset_input
+        ]
+
+        test_size = 100
+        random_seed = 42
+        shot_size = None
+
+        if model_choice != "Autoencoder":
+
+            print("\nSelect Shot Size")
+            print("1 5-shot")
+            print("2 10-shot")
+            print("3 20-shot")
+
+            shot_input = input(
+                "\nEnter shot size choice: "
+            )
+
+            shot_options = {
+                "1": 5,
+                "2": 10,
+                "3": 20
+            }
+
+            if shot_input not in shot_options:
+
+                print("Invalid shot size choice.")
+                continue
+
+            shot_size = shot_options[
+                shot_input
+            ]
+
+        print("\nExperiment Configuration")
+        print(f"Model: {model_choice}")
+        print(f"Dataset: {dataset_choice}")
+        print(f"Shot Size: {shot_size}")
+        print(f"Random Seed: {random_seed}")
+
+        if model_choice == "SetFit":
+
+            runner = SetFitRunner(
+                shot_size=shot_size,
+                test_size=test_size,
+                random_seed=random_seed,
+                batch_size=16,
+                num_epochs=1
+            )
+
+        elif model_choice == "ProtoNet":
+
+            runner = ProtoNetRunner(
+                shot_size=shot_size,
+                test_size=test_size,
+                random_seed=random_seed,
+                number_of_episodes=100,
+                learning_rate=0.001
+            )
+
+        elif model_choice == "MAML":
+
+            runner = MAMLRunner(
+                shot_size=shot_size,
+                query_size=5,
+                test_size=test_size,
+                random_seed=random_seed,
+                inner_lr=0.01,
+                outer_lr=0.001,
+                inner_steps=5,
+                meta_batch_size=4,
+                meta_epochs=100
+            )
+
+        elif model_choice == "Autoencoder":
+
+            runner = EncoderRunner(
+                test_size=0.2,
+                random_seed=random_seed,
+                learning_rate=0.001,
+                batch_size=64,
+                epochs=20
+            )
+
+        cic_folder = (
+            r"C:\Users\snmoh\Desktop\Thesis and code"
+            r"\MachineLearningCSV\MachineLearningCVE"
         )
 
-    elif model_choice == "MAML":
-
-        runner = MAMLRunner(
-            shot_size=shot_size,
-            query_size=5,
-            test_size=test_size,
-            random_seed=random_seed,
-            inner_lr=0.01,
-            outer_lr=0.001,
-            inner_steps=5,
-            meta_batch_size=4,
-            meta_epochs=100
+        unsw_train_file = (
+            r"C:\Users\snmoh\Desktop\Thesis and code"
+            r"\UNSWDATA\CSV Files"
+            r"\Training and Testing Sets"
+            r"\UNSW_NB15_training-set.csv"
         )
 
-    elif model_choice == "Autoencoder":
-
-        runner = EncoderRunner(
-            test_size=0.2,
-            random_seed=random_seed,
-            learning_rate=0.001,
-            batch_size=64,
-            epochs=20
+        unsw_test_file = (
+            r"C:\Users\snmoh\Desktop\Thesis and code"
+            r"\UNSWDATA\CSV Files"
+            r"\Training and Testing Sets"
+            r"\UNSW_NB15_testing-set.csv"
         )
 
-    cic_folder = (
-        r"C:\Users\snmoh\Desktop\Thesis and code"
-        r"\MachineLearningCSV\MachineLearningCVE"
-    )
+        # CIC-IDS2017 Experiment
 
-    unsw_train_file = (
-        r"C:\Users\snmoh\Desktop\Thesis and code"
-        r"\UNSWDATA\CSV Files"
-        r"\Training and Testing Sets"
-        r"\UNSW_NB15_training-set.csv"
-    )
+        if dataset_choice in (
+            "CIC-IDS2017",
+            "Both"
+        ):
 
-    unsw_test_file = (
-        r"C:\Users\snmoh\Desktop\Thesis and code"
-        r"\UNSWDATA\CSV Files"
-        r"\Training and Testing Sets"
-        r"\UNSW_NB15_testing-set.csv"
-    )
+            print("\nStarting CIC-IDS2017 Experiment")
 
-    if dataset_choice in (
-        "CIC-IDS2017",
-        "Both"
-    ):
+            cic_dataset = dataPrep(
+                folder_path=cic_folder
+            )
 
-        cic_dataset = dataPrep(
-            folder_path=cic_folder
-        )
+            cic_output_dir = (
+                f"{model_choice.lower()}"
+                f"-cicids2017-model"
+            )
 
-        cic_output_dir = (
-            f"{model_choice.lower()}"
-            f"-cicids2017-model"
-        )
-
-        results = runner.run(
-            dataset=cic_dataset,
-            dataset_name="CIC-IDS2017",
-            model_output_dir=cic_output_dir
-        )
-
-        if results is not None:
-
-            Evaluator.save_results(
-                results=results,
-                model_name=model_choice,
+            results = runner.run(
+                dataset=cic_dataset,
                 dataset_name="CIC-IDS2017",
-                model_output_dir=cic_output_dir,
-                shot_size=shot_size
+                model_output_dir=cic_output_dir
             )
 
-        else:
-            print(
-                "Warning: CIC-IDS2017 runner did "
-                "not return evaluation results."
+            if results is not None:
+
+                Evaluator.save_results(
+                    results=results,
+                    model_name=model_choice,
+                    dataset_name="CIC-IDS2017",
+                    model_output_dir=cic_output_dir,
+                    shot_size=shot_size
+                )
+
+            else:
+
+                print(
+                    "Warning: CIC-IDS2017 runner did "
+                    "not return evaluation results."
+                )
+
+        # UNSW-NB15 Experiment
+
+        if dataset_choice in (
+            "UNSW-NB15",
+            "Both"
+        ):
+
+            print("\nStarting UNSW-NB15 Experiment")
+
+            unsw_dataset = UNSWDataPrepSetFit(
+                train_file_path=unsw_train_file,
+                test_file_path=unsw_test_file
             )
 
-    if dataset_choice in (
-        "UNSW-NB15",
-        "Both"
-    ):
+            unsw_output_dir = (
+                f"{model_choice.lower()}"
+                f"-unsw-nb15-model"
+            )
 
-        unsw_dataset = UNSWDataPrepSetFit(
-            train_file_path=unsw_train_file,
-            test_file_path=unsw_test_file
-        )
-
-        unsw_output_dir = (
-            f"{model_choice.lower()}"
-            f"-unsw-nb15-model"
-        )
-
-        results = runner.run(
-            dataset=unsw_dataset,
-            dataset_name="UNSW-NB15",
-            model_output_dir=unsw_output_dir
-        )
-
-        if results is not None:
-
-            Evaluator.save_results(
-                results=results,
-                model_name=model_choice,
+            results = runner.run(
+                dataset=unsw_dataset,
                 dataset_name="UNSW-NB15",
-                model_output_dir=unsw_output_dir,
-                shot_size=shot_size
+                model_output_dir=unsw_output_dir
             )
 
-        else:
-            print(
-                "Warning: UNSW-NB15 runner did "
-                "not return evaluation results."
-            )
+            if results is not None:
+
+                Evaluator.save_results(
+                    results=results,
+                    model_name=model_choice,
+                    dataset_name="UNSW-NB15",
+                    model_output_dir=unsw_output_dir,
+                    shot_size=shot_size
+                )
+
+            else:
+
+                print(
+                    "Warning: UNSW-NB15 runner did "
+                    "not return evaluation results."
+                )
+
+        print("\nExperiment Completed")
+        print("All evaluation results have been processed.")
+
+        print("\nRun another experiment?")
+        print("1 Yes")
+        print("2 No")
+
+        repeat = input(
+            "\nEnter choice: "
+        )
+
+        if repeat != "1":
+
+            print("Exiting program.")
+            break
 
 
 if __name__ == "__main__":

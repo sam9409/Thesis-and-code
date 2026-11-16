@@ -1,0 +1,15 @@
+Model: Autoencoder
+Dataset: UNSW-NB15
+Shot Size: traditional
+Attack: Shellcode
+Encoded Label: 8
+
+Attack Evaluation Results
+precision: 0.03372781065088758
+recall: 0.15079365079365079
+f1_score: 0.0551257253384913
+support: 378
+true_positives: 57
+true_negatives: 80321
+false_positives: 1633
+false_negatives: 321

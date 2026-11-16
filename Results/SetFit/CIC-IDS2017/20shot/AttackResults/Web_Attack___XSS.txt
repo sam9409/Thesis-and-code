@@ -1,0 +1,15 @@
+Model: SetFit
+Dataset: CIC-IDS2017
+Shot Size: 20shot
+Attack: Web Attack � XSS
+Encoded Label: 14
+
+Attack Evaluation Results
+precision: 0.5448275862068965
+recall: 0.79
+f1_score: 0.6448979591836734
+support: 100
+true_positives: 79
+true_negatives: 1051
+false_positives: 66
+false_negatives: 21

@@ -1,0 +1,15 @@
+Model: ProtoNet
+Dataset: CIC-IDS2017
+Shot Size: 5shot
+Attack: Heartbleed
+Encoded Label: 8
+
+Attack Evaluation Results
+precision: 1.0
+recall: 1.0
+f1_score: 1.0
+support: 1
+true_positives: 1
+true_negatives: 1237
+false_positives: 0
+false_negatives: 0

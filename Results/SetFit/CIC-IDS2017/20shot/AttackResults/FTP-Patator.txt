@@ -1,0 +1,15 @@
+Model: SetFit
+Dataset: CIC-IDS2017
+Shot Size: 20shot
+Attack: FTP-Patator
+Encoded Label: 7
+
+Attack Evaluation Results
+precision: 1.0
+recall: 1.0
+f1_score: 1.0
+support: 100
+true_positives: 100
+true_negatives: 1117
+false_positives: 0
+false_negatives: 0

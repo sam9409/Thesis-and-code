@@ -1,0 +1,15 @@
+Model: Autoencoder
+Dataset: UNSW-NB15
+Shot Size: traditional
+Attack: Reconnaissance
+Encoded Label: 7
+
+Attack Evaluation Results
+precision: 0.6985645933014354
+recall: 0.7517162471395881
+f1_score: 0.7241664370349958
+support: 3496
+true_positives: 2628
+true_negatives: 77702
+false_positives: 1134
+false_negatives: 868

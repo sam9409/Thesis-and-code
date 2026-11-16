@@ -1,0 +1,15 @@
+Model: ProtoNet
+Dataset: UNSW-NB15
+Shot Size: 10shot
+Attack: Worms
+Encoded Label: 9
+
+Attack Evaluation Results
+precision: 0.10526315789473684
+recall: 0.045454545454545456
+f1_score: 0.06349206349206349
+support: 44
+true_positives: 2
+true_negatives: 883
+false_positives: 17
+false_negatives: 42

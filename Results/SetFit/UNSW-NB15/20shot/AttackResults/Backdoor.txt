@@ -1,0 +1,15 @@
+Model: SetFit
+Dataset: UNSW-NB15
+Shot Size: 20shot
+Attack: Backdoor
+Encoded Label: 1
+
+Attack Evaluation Results
+precision: 0.34375
+recall: 0.22
+f1_score: 0.2682926829268293
+support: 100
+true_positives: 22
+true_negatives: 802
+false_positives: 42
+false_negatives: 78

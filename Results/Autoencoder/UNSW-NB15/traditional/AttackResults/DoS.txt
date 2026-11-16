@@ -1,0 +1,15 @@
+Model: Autoencoder
+Dataset: UNSW-NB15
+Shot Size: traditional
+Attack: DoS
+Encoded Label: 2
+
+Attack Evaluation Results
+precision: 0.66
+recall: 0.008070432868672046
+f1_score: 0.015945880647499397
+support: 4089
+true_positives: 33
+true_negatives: 78226
+false_positives: 17
+false_negatives: 4056

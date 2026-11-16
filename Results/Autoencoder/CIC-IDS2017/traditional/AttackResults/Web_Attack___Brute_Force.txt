@@ -1,0 +1,15 @@
+Model: Autoencoder
+Dataset: CIC-IDS2017
+Shot Size: traditional
+Attack: Web Attack � Brute Force
+Encoded Label: 12
+
+Attack Evaluation Results
+precision: 1.0
+recall: 0.05647840531561462
+f1_score: 0.1069182389937107
+support: 301
+true_positives: 17
+true_negatives: 565275
+false_positives: 0
+false_negatives: 284

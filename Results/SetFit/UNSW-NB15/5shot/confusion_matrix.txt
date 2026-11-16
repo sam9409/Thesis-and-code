@@ -1,0 +1,27 @@
+Confusion Matrix
+
+Rows: Actual classes
+Columns: Predicted classes
+
+Class Order:
+0: Analysis
+1: Backdoor
+2: DoS
+3: Exploits
+4: Fuzzers
+5: Generic
+6: Normal
+7: Reconnaissance
+8: Shellcode
+9: Worms
+
+10 43 28 0 2 0 7 10 0 0
+7 43 37 0 4 1 1 6 1 0
+5 33 20 5 8 2 9 9 0 9
+4 20 10 13 5 1 19 4 2 22
+6 9 11 8 14 1 9 18 16 8
+0 0 0 0 0 98 1 0 0 1
+0 5 1 10 23 7 30 11 8 5
+1 4 1 0 4 1 0 42 33 14
+0 0 0 0 31 0 0 53 16 0
+0 0 0 0 4 0 3 6 0 31

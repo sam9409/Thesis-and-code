@@ -1,0 +1,15 @@
+Model: SetFit
+Dataset: CIC-IDS2017
+Shot Size: 10shot
+Attack: Infiltration
+Encoded Label: 9
+
+Attack Evaluation Results
+precision: 1.0
+recall: 0.8846153846153846
+f1_score: 0.9387755102040817
+support: 26
+true_positives: 23
+true_negatives: 1212
+false_positives: 0
+false_negatives: 3

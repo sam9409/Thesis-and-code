@@ -1,0 +1,13 @@
+Model: MAML
+Dataset: UNSW-NB15
+Shot Size: 5shot
+
+Evaluation Results
+accuracy: 0.5962323276490308
+macro_precision: 0.3445393755394643
+macro_recall: 0.4909901095439547
+macro_f1: 0.32935109275776175
+average_latency_ms: 0.0012567685935712357
+median_latency_ms: 0.001165039066108875
+worst_latency_ms: 0.00280468759683572
+throughput_samples_per_second: 795691.430479177

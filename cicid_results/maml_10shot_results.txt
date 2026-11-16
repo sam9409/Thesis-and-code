@@ -1,0 +1,13 @@
+Model: MAML
+Dataset: CIC-IDS2017
+Shot Size: 10
+
+Evaluation Results
+accuracy: 0.8403238468393284
+macro_precision: 0.3068845136001453
+macro_recall: 0.8062028960164092
+macro_f1: 0.3514950446784493
+average_latency_ms: 0.0010278164635482425
+median_latency_ms: 0.0010035155355581082
+worst_latency_ms: 0.01792460898286663
+throughput_samples_per_second: 972936.3514452628

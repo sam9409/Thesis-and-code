@@ -1,0 +1,15 @@
+Model: SetFit
+Dataset: UNSW-NB15
+Shot Size: 20shot
+Attack: Worms
+Encoded Label: 9
+
+Attack Evaluation Results
+precision: 0.532258064516129
+recall: 0.75
+f1_score: 0.6226415094339622
+support: 44
+true_positives: 33
+true_negatives: 871
+false_positives: 29
+false_negatives: 11

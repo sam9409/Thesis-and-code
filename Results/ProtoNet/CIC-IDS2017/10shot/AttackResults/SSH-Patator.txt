@@ -1,0 +1,15 @@
+Model: ProtoNet
+Dataset: CIC-IDS2017
+Shot Size: 10shot
+Attack: SSH-Patator
+Encoded Label: 11
+
+Attack Evaluation Results
+precision: 0.9137931034482759
+recall: 0.53
+f1_score: 0.6708860759493671
+support: 100
+true_positives: 53
+true_negatives: 1112
+false_positives: 5
+false_negatives: 47

@@ -1,0 +1,15 @@
+Model: SetFit
+Dataset: CIC-IDS2017
+Shot Size: 5shot
+Attack: DDoS
+Encoded Label: 2
+
+Attack Evaluation Results
+precision: 0.23214285714285715
+recall: 0.13
+f1_score: 0.16666666666666666
+support: 100
+true_positives: 13
+true_negatives: 1110
+false_positives: 43
+false_negatives: 87

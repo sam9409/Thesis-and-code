@@ -1,0 +1,13 @@
+Model: SetFit
+Dataset: CIC-IDS2017
+Shot Size: 10
+
+Evaluation Results
+accuracy: 0.7326332794830371
+macro_precision: 0.7063188269676494
+macro_recall: 0.7466713286713288
+macro_f1: 0.688719228890966
+average_latency_ms: 5.294602419970397
+median_latency_ms: 5.23975002579391
+worst_latency_ms: 12.258199974894524
+throughput_samples_per_second: 188.84927698303227

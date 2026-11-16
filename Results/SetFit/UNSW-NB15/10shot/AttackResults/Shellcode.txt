@@ -1,0 +1,15 @@
+Model: SetFit
+Dataset: UNSW-NB15
+Shot Size: 10shot
+Attack: Shellcode
+Encoded Label: 8
+
+Attack Evaluation Results
+precision: 0.3565217391304348
+recall: 0.82
+f1_score: 0.49696969696969695
+support: 100
+true_positives: 82
+true_negatives: 696
+false_positives: 148
+false_negatives: 18

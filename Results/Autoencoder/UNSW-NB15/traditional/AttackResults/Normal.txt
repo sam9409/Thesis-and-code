@@ -1,0 +1,15 @@
+Model: Autoencoder
+Dataset: UNSW-NB15
+Shot Size: traditional
+Attack: Normal
+Encoded Label: 6
+
+Attack Evaluation Results
+precision: 0.9999189254925276
+recall: 1.0
+f1_score: 0.9999594611029282
+support: 37000
+true_positives: 37000
+true_negatives: 45329
+false_positives: 3
+false_negatives: 0

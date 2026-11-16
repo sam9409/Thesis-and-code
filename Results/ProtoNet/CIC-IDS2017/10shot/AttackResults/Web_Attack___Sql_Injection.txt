@@ -1,0 +1,15 @@
+Model: ProtoNet
+Dataset: CIC-IDS2017
+Shot Size: 10shot
+Attack: Web Attack � Sql Injection
+Encoded Label: 13
+
+Attack Evaluation Results
+precision: 0.06666666666666667
+recall: 1.0
+f1_score: 0.125
+support: 1
+true_positives: 1
+true_negatives: 1202
+false_positives: 14
+false_negatives: 0

@@ -1,0 +1,15 @@
+Model: ProtoNet
+Dataset: CIC-IDS2017
+Shot Size: 5shot
+Attack: DDoS
+Encoded Label: 2
+
+Attack Evaluation Results
+precision: 0.7142857142857143
+recall: 0.35
+f1_score: 0.4697986577181208
+support: 100
+true_positives: 35
+true_negatives: 1124
+false_positives: 14
+false_negatives: 65

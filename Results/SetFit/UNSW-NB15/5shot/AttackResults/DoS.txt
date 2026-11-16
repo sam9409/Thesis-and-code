@@ -1,0 +1,15 @@
+Model: SetFit
+Dataset: UNSW-NB15
+Shot Size: 5shot
+Attack: DoS
+Encoded Label: 2
+
+Attack Evaluation Results
+precision: 0.18518518518518517
+recall: 0.2
+f1_score: 0.19230769230769232
+support: 100
+true_positives: 20
+true_negatives: 756
+false_positives: 88
+false_negatives: 80

@@ -1,0 +1,13 @@
+Model: SetFit
+Dataset: UNSW-NB15
+Shot Size: 10shot
+
+Evaluation Results
+accuracy: 0.375
+macro_precision: 0.36479434975863445
+macro_recall: 0.3972727272727273
+macro_f1: 0.3425567425303845
+average_latency_ms: 5.20156377101326
+median_latency_ms: 5.162100002053194
+worst_latency_ms: 7.2361000056844205
+throughput_samples_per_second: 192.22890618086683

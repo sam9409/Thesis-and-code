@@ -1,0 +1,15 @@
+Model: SetFit
+Dataset: CIC-IDS2017
+Shot Size: 5shot
+Attack: PortScan
+Encoded Label: 10
+
+Attack Evaluation Results
+precision: 0.7625
+recall: 0.61
+f1_score: 0.6777777777777778
+support: 100
+true_positives: 61
+true_negatives: 1134
+false_positives: 19
+false_negatives: 39

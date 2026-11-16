@@ -1,0 +1,15 @@
+Model: Autoencoder
+Dataset: UNSW-NB15
+Shot Size: traditional
+Attack: Backdoor
+Encoded Label: 1
+
+Attack Evaluation Results
+precision: 0.0
+recall: 0.0
+f1_score: 0.0
+support: 583
+true_positives: 0
+true_negatives: 81749
+false_positives: 0
+false_negatives: 583

@@ -1,0 +1,15 @@
+Model: ProtoNet
+Dataset: CIC-IDS2017
+Shot Size: 20shot
+Attack: Infiltration
+Encoded Label: 9
+
+Attack Evaluation Results
+precision: 0.0
+recall: 0.0
+f1_score: 0.0
+support: 0
+true_positives: 0
+true_negatives: 1197
+false_positives: 3
+false_negatives: 0

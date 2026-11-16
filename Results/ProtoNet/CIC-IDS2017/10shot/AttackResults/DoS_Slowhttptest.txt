@@ -1,0 +1,15 @@
+Model: ProtoNet
+Dataset: CIC-IDS2017
+Shot Size: 10shot
+Attack: DoS Slowhttptest
+Encoded Label: 5
+
+Attack Evaluation Results
+precision: 0.8387096774193549
+recall: 0.26
+f1_score: 0.3969465648854962
+support: 100
+true_positives: 26
+true_negatives: 1112
+false_positives: 5
+false_negatives: 74

@@ -1,0 +1,13 @@
+Model: ProtoNet
+Dataset: CIC-IDS2017
+Shot Size: 5shot
+
+Evaluation Results
+accuracy: 0.5137318255250404
+macro_precision: 0.5870165322343536
+macro_recall: 0.5416363636363637
+macro_f1: 0.5318040423327757
+average_latency_ms: 0.32811316637369703
+median_latency_ms: 0.3142500063404441
+worst_latency_ms: 7.288900000276044
+throughput_samples_per_second: 3036.8459191055

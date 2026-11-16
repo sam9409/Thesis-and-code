@@ -1,0 +1,15 @@
+Model: SetFit
+Dataset: CIC-IDS2017
+Shot Size: 10shot
+Attack: Heartbleed
+Encoded Label: 8
+
+Attack Evaluation Results
+precision: 0.16666666666666666
+recall: 1.0
+f1_score: 0.2857142857142857
+support: 1
+true_positives: 1
+true_negatives: 1232
+false_positives: 5
+false_negatives: 0

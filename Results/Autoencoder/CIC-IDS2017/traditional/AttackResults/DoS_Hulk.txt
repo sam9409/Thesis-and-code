@@ -1,0 +1,15 @@
+Model: Autoencoder
+Dataset: CIC-IDS2017
+Shot Size: traditional
+Attack: DoS Hulk
+Encoded Label: 4
+
+Attack Evaluation Results
+precision: 0.9870541858132537
+recall: 0.9194133623030961
+f1_score: 0.9520338372930166
+support: 46025
+true_positives: 42316
+true_negatives: 518996
+false_positives: 555
+false_negatives: 3709

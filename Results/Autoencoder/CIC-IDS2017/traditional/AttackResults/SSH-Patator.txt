@@ -1,0 +1,15 @@
+Model: Autoencoder
+Dataset: CIC-IDS2017
+Shot Size: traditional
+Attack: SSH-Patator
+Encoded Label: 11
+
+Attack Evaluation Results
+precision: 0.667818077144502
+recall: 0.9830508474576272
+f1_score: 0.7953376756942063
+support: 1180
+true_positives: 1160
+true_negatives: 563819
+false_positives: 577
+false_negatives: 20

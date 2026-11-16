@@ -1,0 +1,19 @@
+Classification Report
+
+Attack                      Precision      Recall    F1-score     Support
+-------------------------------------------------------------------------
+BENIGN                         0.9546      0.9968      0.9752      454265
+Bot                            0.5680      0.6087      0.5877         391
+DDoS                           0.9993      0.9831      0.9911       25605
+DoS GoldenEye                  0.9949      0.9461      0.9699        2059
+DoS Hulk                       0.9871      0.9194      0.9520       46025
+DoS Slowhttptest               0.8690      0.9827      0.9224        1100
+DoS slowloris                  0.9852      0.8594      0.9180        1159
+FTP-Patator                    0.9713      0.4902      0.6516        1587
+Heartbleed                     0.6667      1.0000      0.8000           2
+Infiltration                   0.0000      0.0000      0.0000           7
+PortScan                       0.9994      0.5035      0.6696       31761
+SSH-Patator                    0.6678      0.9831      0.7953        1180
+Web Attack � Brute Force       1.0000      0.0565      0.1069         301
+Web Attack � Sql Injection      0.0000      0.0000      0.0000           4
+Web Attack � XSS               0.0000      0.0000      0.0000         130

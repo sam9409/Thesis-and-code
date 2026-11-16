@@ -1,0 +1,15 @@
+Model: SetFit
+Dataset: CIC-IDS2017
+Shot Size: 10shot
+Attack: Web Attack � Sql Injection
+Encoded Label: 13
+
+Attack Evaluation Results
+precision: 0.21428571428571427
+recall: 0.5454545454545454
+f1_score: 0.3076923076923077
+support: 11
+true_positives: 6
+true_negatives: 1205
+false_positives: 22
+false_negatives: 5

@@ -1,0 +1,13 @@
+Model: Autoencoder
+Dataset: UNSW-NB15
+Shot Size: None
+
+Evaluation Results
+accuracy: 0.7563401836466987
+macro_precision: 0.5272150798491207
+macro_recall: 0.3949749473123225
+macro_f1: 0.3579950243627164
+average_latency_ms: 0.3866497994737788
+median_latency_ms: 0.3845999017357826
+worst_latency_ms: 1.1589000932872295
+throughput_samples_per_second: 2581.2533531179624

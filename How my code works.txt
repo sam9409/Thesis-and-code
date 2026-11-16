@@ -19,7 +19,7 @@ class means one unique value in the dataset’s label column.
 
 - Shuffle each class - so that not always the same mix for training 
 
-- take N sample for taring 
+- take N sample for training 
 
 - use remaining samples for testing 
 
@@ -315,8 +315,6 @@ throughput - estimates the number of network traffic samples classified per seco
 save_model - saves the trained MAML weights, model configuration, input features, label mapping, and feature-scaling information.
 
 device - selects CUDA when a compatible GPU is available; otherwise, it uses the CPU.
-
-
 
 
 

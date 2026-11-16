@@ -1,0 +1,15 @@
+Model: SetFit
+Dataset: CIC-IDS2017
+Shot Size: 10shot
+Attack: SSH-Patator
+Encoded Label: 11
+
+Attack Evaluation Results
+precision: 0.970873786407767
+recall: 1.0
+f1_score: 0.9852216748768473
+support: 100
+true_positives: 100
+true_negatives: 1135
+false_positives: 3
+false_negatives: 0

@@ -1,0 +1,15 @@
+Model: Autoencoder
+Dataset: CIC-IDS2017
+Shot Size: traditional
+Attack: Bot
+Encoded Label: 1
+
+Attack Evaluation Results
+precision: 0.568019093078759
+recall: 0.6086956521739131
+f1_score: 0.5876543209876544
+support: 391
+true_positives: 238
+true_negatives: 565004
+false_positives: 181
+false_negatives: 153

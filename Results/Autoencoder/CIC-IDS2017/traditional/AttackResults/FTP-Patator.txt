@@ -1,0 +1,15 @@
+Model: Autoencoder
+Dataset: CIC-IDS2017
+Shot Size: traditional
+Attack: FTP-Patator
+Encoded Label: 7
+
+Attack Evaluation Results
+precision: 0.9712858926342073
+recall: 0.4902331442974165
+f1_score: 0.6515912897822446
+support: 1587
+true_positives: 778
+true_negatives: 563966
+false_positives: 23
+false_negatives: 809

@@ -1,0 +1,15 @@
+Model: Autoencoder
+Dataset: CIC-IDS2017
+Shot Size: traditional
+Attack: Web Attack � XSS
+Encoded Label: 14
+
+Attack Evaluation Results
+precision: 0.0
+recall: 0.0
+f1_score: 0.0
+support: 130
+true_positives: 0
+true_negatives: 565446
+false_positives: 0
+false_negatives: 130

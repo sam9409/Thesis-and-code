@@ -1,0 +1,15 @@
+Model: Autoencoder
+Dataset: CIC-IDS2017
+Shot Size: traditional
+Attack: PortScan
+Encoded Label: 10
+
+Attack Evaluation Results
+precision: 0.9993750390600588
+recall: 0.5034791095998237
+f1_score: 0.669611825300448
+support: 31761
+true_positives: 15991
+true_negatives: 533805
+false_positives: 10
+false_negatives: 15770

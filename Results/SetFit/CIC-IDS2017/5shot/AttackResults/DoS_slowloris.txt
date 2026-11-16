@@ -1,0 +1,15 @@
+Model: SetFit
+Dataset: CIC-IDS2017
+Shot Size: 5shot
+Attack: DoS slowloris
+Encoded Label: 6
+
+Attack Evaluation Results
+precision: 0.5164835164835165
+recall: 0.47
+f1_score: 0.49214659685863876
+support: 100
+true_positives: 47
+true_negatives: 1109
+false_positives: 44
+false_negatives: 53

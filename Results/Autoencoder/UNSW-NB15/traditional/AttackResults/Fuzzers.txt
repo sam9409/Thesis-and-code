@@ -1,0 +1,15 @@
+Model: Autoencoder
+Dataset: UNSW-NB15
+Shot Size: traditional
+Attack: Fuzzers
+Encoded Label: 4
+
+Attack Evaluation Results
+precision: 0.27774830924280597
+recall: 0.6910260640052788
+f1_score: 0.3962353386303443
+support: 6062
+true_positives: 4189
+true_negatives: 65377
+false_positives: 10893
+false_negatives: 1873
