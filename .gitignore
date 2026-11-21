@@ -17,6 +17,7 @@ __pycache__/
 # Word documents
 *.docx
 .txt
+.xlsx
 
 
 # VS Code

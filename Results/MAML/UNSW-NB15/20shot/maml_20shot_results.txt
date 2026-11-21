@@ -7,7 +7,24 @@ accuracy: 0.5645192634698538
 macro_precision: 0.32230245540561797
 macro_recall: 0.4956800699565913
 macro_f1: 0.29501645120619957
-average_latency_ms: 0.0011906744599680253
-median_latency_ms: 0.0011757812785617716
-worst_latency_ms: 0.002005769205518449
-throughput_samples_per_second: 839860.1243423448
+average_latency_ms: 0.0012055709866986505
+median_latency_ms: 0.0011812500133601134
+worst_latency_ms: 0.002592968712633592
+throughput_samples_per_second: 829482.4701599792
+classification_report:               precision    recall  f1-score   support
+
+           0     0.0737    0.3442    0.1214       677
+           1     0.0458    0.3619    0.0813       583
+           2     0.3087    0.1225    0.1754      4089
+           3     0.5166    0.3806    0.4383     11132
+           4     0.2390    0.5147    0.3264      6062
+           5     0.9858    0.9623    0.9739     18871
+           6     0.9328    0.5273    0.6737     37000
+           7     0.0624    0.0389    0.0479      3496
+           8     0.0430    0.8862    0.0821       378
+           9     0.0151    0.8182    0.0296        44
+
+    accuracy                         0.5645     82332
+   macro avg     0.3223    0.4957    0.2950     82332
+weighted avg     0.7517    0.5645    0.6220     82332
+

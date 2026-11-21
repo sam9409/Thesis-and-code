@@ -13,7 +13,8 @@ from sklearn.metrics import (
     accuracy_score,
     precision_score,
     recall_score,
-    f1_score
+    f1_score,
+    classification_report
 )
 
 from MAML import MAML
@@ -539,6 +540,14 @@ class MAMLRunner:
             else 0
         )
 
+        report = classification_report(
+            y_test,
+            all_predictions,
+            labels=list(self.label_mapping.values()),
+            digits=4,
+            zero_division=0
+        )
+
         return {
             "accuracy": accuracy,
             "macro_precision": precision,
@@ -547,7 +556,8 @@ class MAMLRunner:
             "average_latency_ms": avg_latency,
             "median_latency_ms": median_latency,
             "worst_latency_ms": worst_latency,
-            "throughput_samples_per_second": throughput
+            "throughput_samples_per_second": throughput,
+            "classification_report": report
         }
 
     def save_model(
@@ -637,7 +647,11 @@ class MAMLRunner:
         print(f"\n{dataset_name} Results")
 
         for metric, value in results.items():
-            print(f"{metric}: {value}")
+            if metric != "classification_report":
+                print(f"{metric}: {value}")
+
+        print("\nIndividual Classification Results:")
+        print(results["classification_report"])
 
         self.save_model(
             model,
